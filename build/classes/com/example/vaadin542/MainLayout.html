@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;vaadin542&quot;}">
+ </head> 
+ <body> 
+  <vaadin-css-layout size-full="true"> 
+   <vaadin-vertical-layout primary-style-name="v-verticallayout" size-full="true" _id="vLayout"> 
+    <vaadin-grid-layout :middle="" :center=""> 
+     <row> 
+      <column> 
+       <vaadin-label style-name="lblTitle1" size-auto="true" plain-text="" _id="lbl1">
+         Movie 
+       </vaadin-label> 
+      </column> 
+      <column> 
+       <vaadin-label style-name="lblTitle2" size-auto="true" plain-text="" _id="lbl2">
+         Pointer 
+       </vaadin-label> 
+      </column> 
+     </row> 
+     <row> 
+      <column> 
+       <vaadin-text-field width="335px" _id="txtField1"></vaadin-text-field> 
+      </column> 
+      <column> 
+       <vaadin-combo-box style-name="cmbMid" item-caption-mode="id" width="210px" _id="cmbBox1"> 
+        <option>Title</option> 
+        <option>Year</option> 
+        <option>Genre</option> 
+        <option>Director</option> 
+        <option>Actor</option> 
+       </vaadin-combo-box> 
+      </column> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f002" style-name="lastBtn" width="76px" plain-text="" _id="btnSearch"></vaadin-button> 
+      </column> 
+     </row> 
+     <row> 
+      <column> 
+       <vaadin-grid-layout width-full="true"> 
+        <row> 
+         <column> 
+          <vaadin-combo-box item-caption-mode="id" width="96px" _id="andOr2"> 
+           <option>AND</option> 
+           <option>OR</option> 
+          </vaadin-combo-box> 
+         </column> 
+         <column> 
+          <vaadin-text-field style-name="txtMid" width="232px" _id="txtField2"></vaadin-text-field> 
+         </column> 
+        </row> 
+       </vaadin-grid-layout> 
+      </column> 
+      <column> 
+       <vaadin-combo-box style-name="cmbMid" item-caption-mode="id" width="211px" _id="cmbBox2"> 
+        <option>Title</option> 
+        <option>Year</option> 
+        <option>Genre</option> 
+        <option>Director</option> 
+        <option>Actor</option> 
+       </vaadin-combo-box> 
+      </column> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f068" style-name="lastBtn" width="48px" plain-text="" _id="btnMinus2"></vaadin-button> 
+      </column> 
+     </row> 
+     <row> 
+      <column> 
+       <vaadin-grid-layout width-full="true"> 
+        <row> 
+         <column> 
+          <vaadin-combo-box item-caption-mode="id" width="96px" _id="andOr3"> 
+           <option>AND</option> 
+           <option>OR</option> 
+          </vaadin-combo-box> 
+         </column> 
+         <column> 
+          <vaadin-text-field style-name="txtMid" width="232px" _id="txtField3"></vaadin-text-field> 
+         </column> 
+        </row> 
+       </vaadin-grid-layout> 
+      </column> 
+      <column> 
+       <vaadin-combo-box style-name="cmbMid" item-caption-mode="id" width="210px" _id="cmbBox3"> 
+        <option>Title</option> 
+        <option>Year</option> 
+        <option>Genre</option> 
+        <option>Director</option> 
+        <option>Actor</option> 
+       </vaadin-combo-box> 
+      </column> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f068" style-name="lastBtn" width="48px" plain-text="" _id="btnMinus3"></vaadin-button> 
+      </column> 
+     </row> 
+     <row> 
+      <column> 
+       <vaadin-grid-layout width-full="true"> 
+        <row> 
+         <column> 
+          <vaadin-combo-box item-caption-mode="id" width="96px" _id="andOr4"> 
+           <option>AND</option> 
+           <option>OR</option> 
+          </vaadin-combo-box> 
+         </column> 
+         <column> 
+          <vaadin-text-field style-name="txtMid" width="232px" _id="txtField4"></vaadin-text-field> 
+         </column> 
+        </row> 
+       </vaadin-grid-layout> 
+      </column> 
+      <column> 
+       <vaadin-combo-box style-name="cmbMid" item-caption-mode="id" width="210px" _id="cmbBox4"> 
+        <option>Title</option> 
+        <option>Year</option> 
+        <option>Genre</option> 
+        <option>Director</option> 
+        <option>Actor</option> 
+       </vaadin-combo-box> 
+      </column> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f068" style-name="lastBtn" width="48px" plain-text="" _id="btnMinus4"></vaadin-button> 
+      </column> 
+     </row> 
+     <row> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f067" style-name="btnBottom" plain-text="" _id="btnAddSrch">
+         add search field 
+       </vaadin-button> 
+      </column> 
+     </row> 
+    </vaadin-grid-layout> 
+   </vaadin-vertical-layout> 
+  </vaadin-css-layout>  
+ </body>
+</html>
