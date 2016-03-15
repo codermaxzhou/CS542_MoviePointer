@@ -66,13 +66,20 @@
     margin-left: 6px;
   }
   
+  .v-select-optiongroup-hor .v-select-option {
+  	display: inline-block;
+    margin-left: 6px;
+  }
+  
   .filterLabel {
   	font-weight: bold;
+  }
+  
+  .moreLink, .btnFilter, .filterLabel {
   	margin-left: 10px;
   }
   
   .btnFilter {
   	margin-top: 6px;
-  	margin-left: 10px;
   }
 }

@@ -55,10 +55,10 @@ public class Model {
     }
     
     public static synchronized List<Movie> search(String argument) throws ClassNotFoundException, SQLException {
-        String query = "SELECT * FROM movie;";
+        String query = "";
         
         if(argument == null || argument.equals("")) {
-            query = "";
+            query = "SELECT * FROM movie;";
         } else {
             query = "select * from movie where title like '%" + argument + "%';"; 
         }

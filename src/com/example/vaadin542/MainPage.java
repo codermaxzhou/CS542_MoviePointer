@@ -1,11 +1,17 @@
 package com.example.vaadin542;
 
+import java.util.ArrayList;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupView;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 public class MainPage extends MainLayout implements ClickListener {
 	Component[][] filters = new Component[3][4];
@@ -75,6 +81,20 @@ public class MainPage extends MainLayout implements ClickListener {
 				}
 			}
 		} else {
+	        // Code to get query list
+            ArrayList<String> query = new ArrayList<>();
+            
+            query.add(txtField1.getValue());
+            query.add((String)cmbBox1.getValue());
+            
+            for(int i = 0; i < 3; ++i) {
+                if(isVisible[i]) {
+                    query.add((String)(((ComboBox) filters[i][0]).getValue()));
+                    query.add(((TextField) filters[i][1]).getValue());
+                    query.add((String)(((ComboBox) filters[i][2]).getValue()));
+                }
+            }
+		    
 			parent.setContent(new ResultsPage(txtField1.getValue(), parent));
 		}
 	}
