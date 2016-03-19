@@ -19,6 +19,15 @@ public class Movie implements Serializable, Cloneable {
     private String posterPath;
     private float rating;
     private int numberOfRating;
+    private int year;
+    
+    public int getYear() {
+        return year;
+    }
+    
+    public void setYear(int year) {
+        this.year = year;
+    }
 
     /**
      * @return the movieID

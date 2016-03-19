@@ -39,13 +39,6 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
         extOptionGrp3.setStyleName("v-select-optiongroup-hor");
         extOptionGrp4.setStyleName("v-select-optiongroup-hor");
 
-        
-        extOptionGrp1.addItems(new String[] { "year 1", "year 2", "year 3" });
-        extOptionGrp2.addItems(new String[] { "genre1", "genre2", "genre3" });
-        extOptionGrp3.addItems(
-                new String[] { "director1", "director2", "director3" });
-        extOptionGrp4.addItems(new String[] { "actor1", "actor2", "actor3" });
-
         win.setContent(windowContent);
 
         btnHome.addClickListener(this);
@@ -57,10 +50,15 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
         this.parent = parent;
 
         try {
+            Model.generateQuery(query);
             gridResults.setContainerDataSource(new BeanItemContainer<>(
-                    Movie.class, Model.search(query)));
+                    Movie.class, Model.search()));
             gridResults.setVisibleColumns("movieID", "movieTitle",
-                    "releaseDate", "rating");
+                    "year", "rating");
+            extOptionGrp1.addItems(Model.filterYear());
+            extOptionGrp2.addItems(Model.filterGenre());
+            extOptionGrp3.addItems(Model.filterDirector());
+            extOptionGrp4.addItems(Model.filterActor());
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
