@@ -81,7 +81,11 @@ public class MainPage extends MainLayout implements ClickListener {
 				}
 			}
 		} else {
-	        // Code to get query list
+	        /** Code to get query list
+	         *  the first element is search term 
+	         *  the second element is type term
+	         *  next elements are [operator] [search] [type]
+		    */
             ArrayList<String> query = new ArrayList<>();
             
             query.add(txtField1.getValue());
@@ -95,7 +99,7 @@ public class MainPage extends MainLayout implements ClickListener {
                 }
             }
 		    
-			parent.setContent(new ResultsPage(txtField1.getValue(), parent));
+			parent.setContent(new ResultsPage(query, parent));
 		}
 	}
 }
