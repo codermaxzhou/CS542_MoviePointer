@@ -22,6 +22,7 @@ public class Model {
     private static String queryGenre = "";
     private static String queryDirector = "";
     private static String queryActor = "";
+    private static String queryFilter = "";
     
     private static Connection getConnection() throws ClassNotFoundException, SQLException {
         if(conn == null) {
@@ -32,33 +33,38 @@ public class Model {
         return conn;
     }
     
-    public static synchronized List<User> filter(String filter) throws ClassNotFoundException, SQLException {
-        String query = "";
-        
-        if(filter == null || filter.equals("")) {
-            query = "SELECT * FROM users;";
-        } else {
-            query = "SELECT * FROM users WHERE username ='" + filter + "';"; 
-        }
-        
-        Statement stmt = getConnection().createStatement();
-        ResultSet rs = stmt.executeQuery(query);
-        
-        List<User> l = new ArrayList<>();
-        
-        while(rs.next()) {
-            User u = new User();
-            
-            u.setID(rs.getInt("userid"));
-            u.setName(rs.getString("username"));
-            u.setType(rs.getString("usertype"));
-            
-            l.add(u);
-        }
-        
-        return l;
+    public static void generateFilterQuery(List<Integer> y, List<String> g, List<String> d, List<String> a) {
+       queryFilter = queryMovie.replace(";", "");
+       if (!y.isEmpty()) {
+           queryFilter = queryFilter + " AND (year = " + y.remove(0);
+           while(!y.isEmpty())
+               queryFilter = queryFilter + " OR year = " + y.remove(0);
+           queryFilter = queryFilter + ")";
+       }
+       
+       if (!g.isEmpty()){
+           queryFilter = queryFilter + " AND (movie_id IN (SELECT movie_id FROM movietype WHERE genre_id IN (SELECT genre_id FROM genre WHERE genre_name = '" + g.remove(0) + "')) ";
+           while(!g.isEmpty())
+               queryFilter = queryFilter + " OR movie_id IN (SELECT movie_id FROM movietype WHERE genre_id IN (SELECT genre_id FROM genre WHERE genre_name = '" + g.remove(0) + "')) ";
+           queryFilter = queryFilter + ")";
+       }
+       
+       if (!d.isEmpty()){
+           queryFilter = queryFilter + " AND (movie_Id IN (SELECT movie_id FROM direct WHERE director_id IN (SELECT director_id FROM Director WHERE name LIKE '%" + d.remove(0) + "%'))";
+           while(!d.isEmpty())
+               queryFilter = queryFilter + " OR movie_Id IN (SELECT movie_id FROM direct WHERE director_id IN (SELECT director_id FROM Director WHERE name LIKE '%" + d.remove(0) + "%'))";
+           queryFilter = queryFilter + ")";
+       }
+       
+       if (!a.isEmpty()){
+           queryFilter = queryFilter + " AND (movie_Id IN (SELECT movie_id FROM star_IN WHERE cast_id IN (SELECT cast_id FROM  cast WHERE name LIKE '%" + a.remove(0) + "%'))";
+           while(!a.isEmpty())
+               queryFilter = queryFilter + " OR movie_Id IN (SELECT movie_id FROM star_IN WHERE cast_id IN (SELECT cast_id FROM  cast WHERE name LIKE '%" + a.remove(0) + "%'))";
+           queryFilter = queryFilter + ")";
+       }
+       
+       queryFilter = queryFilter + ";";
     }
-    
     
     public static void generateQuery(ArrayList<String> arguments) {
         String term = "";
@@ -126,6 +132,31 @@ public class Model {
         }
         
         return l;
+    }
+    
+    public static synchronized List<Movie> filter() throws ClassNotFoundException, SQLException {
+        
+        List<Movie> l = new ArrayList<>();
+        ResultSet rs = dbAccess(queryFilter);
+        while(rs.next()) {
+            Movie m = new Movie();
+            
+            m.setMovieID(rs.getInt("movie_id"));
+            m.setMovieTitle(rs.getString("title"));
+            m.setOverview(rs.getString("overview"));
+            m.setReleaseDate(rs.getDate("rel_date"));
+            m.setBudget(rs.getInt("budget"));
+            m.setRevenue(rs.getInt("revenue"));
+            m.setRuntime(rs.getInt("runtime"));
+            m.setPosterPath(rs.getString("poster_path"));
+            m.setRating(rs.getFloat("rating"));
+            m.setYear(rs.getInt("year"));
+            
+            l.add(m);
+        }
+        
+        return l;
+        
     }
     
     public static synchronized List<Integer> filterYear() throws ClassNotFoundException, SQLException {

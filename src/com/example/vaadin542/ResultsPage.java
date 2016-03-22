@@ -2,7 +2,11 @@ package com.example.vaadin542;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.example.vaadin542.model.Model;
 import com.example.vaadin542.model.Movie;
@@ -57,22 +61,52 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
                     Movie.class, Model.search()));
             gridResults.setVisibleColumns("movieID", "movieTitle",
                     "year", "rating");
+            
             List<Integer> years = Model.filterYear();
             List<String> genres = Model.filterGenre();
             List<String> directors = Model.filterDirector();
             List<String> actors = Model.filterActor();
-            extOptionGrp1.addItems(years);
-            extOptionGrp2.addItems(genres);
-            extOptionGrp3.addItems(directors);
-            extOptionGrp4.addItems(actors);
-            if (years.size() >= 3) optionGrp1.addItems(years.get(0), years.get(1), years.get(2));
-            else optionGrp1.addItems(years);
-            if (genres.size() >= 3) optionGrp2.addItems(genres.get(0), genres.get(1), genres.get(2));
-            else optionGrp2.addItems(genres);
-            if (directors.size() >= 3) optionGrp3.addItems(directors.get(0), directors.get(1), directors.get(2));
-            else optionGrp3.addItems(directors);
-            if (actors.size() >= 3) optionGrp4.addItems(actors.get(0), actors.get(1), actors.get(2));
-            else optionGrp4.addItems(actors);
+            
+            if (years.size() > 3) {
+                optionGrp1.addItems(years.get(0), years.get(1), years.get(2));
+                years.remove(0);
+                years.remove(0);
+                years.remove(0);
+                extOptionGrp1.addItems(years);
+            }
+            else {
+                optionGrp1.addItems(years);
+            }
+            if (genres.size() > 3) {
+                optionGrp2.addItems(genres.get(0), genres.get(1), genres.get(2));
+                genres.remove(0);
+                genres.remove(0);
+                genres.remove(0);
+                extOptionGrp2.addItems(genres);
+            }
+            else {
+                optionGrp2.addItems(genres);
+            }
+            if (directors.size() > 3) {
+                optionGrp3.addItems(directors.get(0), directors.get(1), directors.get(2));
+                directors.remove(0);
+                directors.remove(0);
+                directors.remove(0);
+                extOptionGrp3.addItems(directors);
+            }
+            else {
+                optionGrp3.addItems(directors);
+            }
+            if (actors.size() > 3) {
+                optionGrp4.addItems(actors.get(0), actors.get(1), actors.get(2));
+                actors.remove(0);
+                actors.remove(0);
+                actors.remove(0);
+                extOptionGrp4.addItems(actors);
+            }
+            else {
+                optionGrp4.addItems(actors);
+            }
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -96,8 +130,40 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
         }
         
         else if (origin.equals(btnFilter)) {
-            System.out.println(optionGrp1.getValue());
-        }   
+            List<Integer> selectedYear = new ArrayList<Integer>();
+            selectedYear.addAll((Collection<? extends Integer>) optionGrp1.getValue());
+            selectedYear.addAll((Collection<? extends Integer>) extOptionGrp1.getValue());
+            
+            List<String> selectedGenre = new ArrayList<String>();
+            selectedGenre.addAll((Collection<? extends String>) optionGrp2.getValue());
+            selectedGenre.addAll((Collection<? extends String>) extOptionGrp2.getValue());
+            
+            List<String> selectedDirector = new ArrayList<String>();
+            selectedDirector.addAll((Collection<? extends String>) optionGrp3.getValue());
+            selectedDirector.addAll((Collection<? extends String>) extOptionGrp3.getValue());
+            
+            List<String> selectedActor = new ArrayList<String>();
+            selectedActor.addAll((Collection<? extends String>) optionGrp4.getValue());
+            selectedActor.addAll((Collection<? extends String>) extOptionGrp4.getValue());
+            
+            try {
+            Model.generateFilterQuery(selectedYear, selectedGenre, selectedDirector, selectedActor);
+            
+            gridResults.setContainerDataSource(new BeanItemContainer<>(
+                    Movie.class, Model.filter()));
+            gridResults.setVisibleColumns("movieID", "movieTitle",
+                    "year", "rating");
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
 
         else {
             windowContent.removeAllComponents();
