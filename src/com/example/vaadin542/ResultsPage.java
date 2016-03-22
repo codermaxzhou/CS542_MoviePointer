@@ -2,6 +2,7 @@ package com.example.vaadin542;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.example.vaadin542.model.Model;
 import com.example.vaadin542.model.Movie;
@@ -46,6 +47,7 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
         linkGenre.addClickListener(this);
         linkActor.addClickListener(this);
         linkDirector.addClickListener(this);
+        btnFilter.addClickListener(this);
 
         this.parent = parent;
 
@@ -55,10 +57,22 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
                     Movie.class, Model.search()));
             gridResults.setVisibleColumns("movieID", "movieTitle",
                     "year", "rating");
-            extOptionGrp1.addItems(Model.filterYear());
-            extOptionGrp2.addItems(Model.filterGenre());
-            extOptionGrp3.addItems(Model.filterDirector());
-            extOptionGrp4.addItems(Model.filterActor());
+            List<Integer> years = Model.filterYear();
+            List<String> genres = Model.filterGenre();
+            List<String> directors = Model.filterDirector();
+            List<String> actors = Model.filterActor();
+            extOptionGrp1.addItems(years);
+            extOptionGrp2.addItems(genres);
+            extOptionGrp3.addItems(directors);
+            extOptionGrp4.addItems(actors);
+            if (years.size() >= 3) optionGrp1.addItems(years.get(0), years.get(1), years.get(2));
+            else optionGrp1.addItems(years);
+            if (genres.size() >= 3) optionGrp2.addItems(genres.get(0), genres.get(1), genres.get(2));
+            else optionGrp2.addItems(genres);
+            if (directors.size() >= 3) optionGrp3.addItems(directors.get(0), directors.get(1), directors.get(2));
+            else optionGrp3.addItems(directors);
+            if (actors.size() >= 3) optionGrp4.addItems(actors.get(0), actors.get(1), actors.get(2));
+            else optionGrp4.addItems(actors);
         } catch (IllegalArgumentException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -80,6 +94,10 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
             parent.setContent(layout);
             layout.init();
         }
+        
+        else if (origin.equals(btnFilter)) {
+            System.out.println(optionGrp1.getValue());
+        }   
 
         else {
             windowContent.removeAllComponents();

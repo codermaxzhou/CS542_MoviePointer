@@ -1,23 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
  <head>
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;vaadin542&quot;}">
  </head> 
  <body> 
-  <vaadin-css-layout size-full="true"> 
-   <vaadin-vertical-layout primary-style-name="v-verticallayout"> 
-    <vaadin-button icon="fonticon://FontAwesome/f015" style-name="btnHome" plain-text="" _id="btnHome"></vaadin-button> 
+  <vaadin-css-layout size-full> 
+   <vaadin-vertical-layout> 
+    <vaadin-button icon="fonticon://FontAwesome/f015" style-name="btnHome" plain-text _id="btnHome"></vaadin-button> 
    </vaadin-vertical-layout> 
    <vaadin-horizontal-split-panel split-position="20.416666%" _id="rightBar"> 
-    <vaadin-grid-layout width-full="true"> 
+    <vaadin-grid-layout width-full> 
      <row> 
       <column expand="1"> 
-       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full="true" _id="optionGrp1"> 
-        <option>Option 1</option> 
-        <option>Option 2</option> 
-        <option>Option 3</option> 
-        <option>Option 4</option> 
-       </vaadin-option-group> 
+       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full _id="optionGrp1"></vaadin-option-group> 
       </column> 
      </row> 
      <row> 
@@ -29,17 +24,14 @@
      </row> 
      <row> 
       <column> 
-       <vaadin-label style-name="filterLabel" width="35px" plain-text="" _id="lblYear">
+       <vaadin-label style-name="filterLabel" width="35px" plain-text _id="lblYear">
          Year 
        </vaadin-label> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full="true" _id="optionGrp2"> 
-        <option>Option 1</option> 
-        <option>Option 2</option> 
-        <option>Option 3</option> 
+       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full _id="optionGrp2"> 
        </vaadin-option-group> 
       </column> 
      </row> 
@@ -52,17 +44,14 @@
      </row> 
      <row> 
       <column> 
-       <vaadin-label style-name="filterLabel" size-auto="true" plain-text="">
+       <vaadin-label style-name="filterLabel" size-auto plain-text>
          Genre 
        </vaadin-label> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full="true" _id="optionGrp3"> 
-        <option>Option 1</option> 
-        <option>Option 2</option> 
-        <option>Option 3</option> 
+       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full _id="optionGrp3"> 
        </vaadin-option-group> 
       </column> 
      </row> 
@@ -75,17 +64,14 @@
      </row> 
      <row> 
       <column> 
-       <vaadin-label style-name="filterLabel" size-auto="true" plain-text="">
+       <vaadin-label style-name="filterLabel" size-auto plain-text>
          Director 
        </vaadin-label> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full="true" _id="optionGrp4"> 
-        <option>Option 1</option> 
-        <option>Option 2</option> 
-        <option>Option 3</option> 
+       <vaadin-option-group style-name="v-select-optiongroup-horizontal" item-caption-mode="id" width-full _id="optionGrp4"> 
        </vaadin-option-group> 
       </column> 
      </row> 
@@ -98,32 +84,32 @@
      </row> 
      <row> 
       <column> 
-       <vaadin-label style-name="filterLabel" size-auto="true" plain-text="">
+       <vaadin-label style-name="filterLabel" size-auto plain-text>
          Actor 
        </vaadin-label> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-slider width-full="true" _id="sldrRating"></vaadin-slider> 
+       <vaadin-slider width-full _id="sldrRating"></vaadin-slider> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-label style-name="filterLabel" size-auto="true" plain-text="">
+       <vaadin-label style-name="filterLabel" size-auto plain-text>
          Rating (&gt;) 
        </vaadin-label> 
       </column> 
      </row> 
      <row> 
       <column> 
-       <vaadin-button icon="fonticon://FontAwesome/f0b0" style-name="btnFilter" plain-text="" _id="btnFilter">
+       <vaadin-button icon="fonticon://FontAwesome/f0b0" style-name="btnFilter" plain-text _id="btnFilter">
          filter search 
        </vaadin-button> 
       </column> 
      </row> 
     </vaadin-grid-layout> 
-    <vaadin-table size-full="true" _id="gridResults"></vaadin-table> 
+    <vaadin-table size-full _id="gridResults"></vaadin-table> 
    </vaadin-horizontal-split-panel> 
   </vaadin-css-layout>  
  </body>

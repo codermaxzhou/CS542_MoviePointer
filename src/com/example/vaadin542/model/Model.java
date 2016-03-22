@@ -69,11 +69,12 @@ public class Model {
         term = arguments.get(0);
         type = arguments.get(1);
         
+        
         if (type.equals("Title")) queryMovie = "select * from movie where title like '%" + term + "%' "; 
         if (type.equals("Year")) queryMovie = "select * from movie where year = " + term + " ";
         if (type.equals("Genre")) queryMovie = "select * from movie where movie_id IN (SELECT movie_id FROM movietype WHERE genre_id IN (SELECT genre_id FROM genre WHERE genre_name = '" + term + "')) ";
-        if (type.equals("Director")) queryMovie = "SELECT* FROM movie WHERE movie_Id IN (SELECT movie_id FROM direct WHERE director_id IN (SELECT director_id FROM Director WHERE name LIKE '%" + term + "%') ) ";
-        if (type.equals("Actor")) queryMovie = "SELECT * FROM movie WHERE movie_Id IN (SELECT movie_id FROM star_IN WHERE cast_id IN (SELECT cast_id FROM  cast WHERE name LIKE '%" + term + "%') ) ";
+        if (type.equals("Director")) queryMovie = "SELECT* FROM movie WHERE movie_Id IN (SELECT movie_id FROM direct WHERE director_id IN (SELECT director_id FROM Director WHERE name LIKE '%" + term + "%')) ";
+        if (type.equals("Actor")) queryMovie = "SELECT * FROM movie WHERE movie_Id IN (SELECT movie_id FROM star_IN WHERE cast_id IN (SELECT cast_id FROM  cast WHERE name LIKE '%" + term + "%')) ";
         
         for (int i=2; i<arguments.size(); i++) {
             if ((i % 3) == 2) operator = arguments.get(i);
