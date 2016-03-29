@@ -1,15 +1,32 @@
 package com.example.vaadin542.model;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 //import org.vaadin.addons.lazyquerycontainer.Query;
 //import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
 //import org.vaadin.addons.lazyquerycontainer.QueryFactory;
+
+import javax.imageio.ImageIO;
 
 public class Model {
     private static Connection conn = null;
@@ -104,13 +121,13 @@ public class Model {
 
     }
     
-    private static synchronized ResultSet dbAccess(String query) throws ClassNotFoundException, SQLException {
+    public static synchronized ResultSet dbAccess(String query) throws ClassNotFoundException, SQLException {
         Statement stmt = getConnection().createStatement();
         ResultSet rs = stmt.executeQuery(query);
         return rs;
     }
     
-    public static synchronized List<Movie> search() throws ClassNotFoundException, SQLException {        
+    public static synchronized List<Movie> search() throws ClassNotFoundException, SQLException, MalformedURLException, IOException {        
         
         List<Movie> l = new ArrayList<>();
         ResultSet rs = dbAccess(queryMovie);
@@ -127,14 +144,13 @@ public class Model {
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
             m.setYear(rs.getInt("year"));
-            
             l.add(m);
         }
         
         return l;
     }
     
-    public static synchronized List<Movie> filter() throws ClassNotFoundException, SQLException {
+    public static synchronized List<Movie> filter() throws ClassNotFoundException, SQLException, MalformedURLException, IOException {
         
         List<Movie> l = new ArrayList<>();
         ResultSet rs = dbAccess(queryFilter);
@@ -151,6 +167,9 @@ public class Model {
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
             m.setYear(rs.getInt("year"));
+            
+            //BufferedImage image = resize(new URL(m.getPosterPath()), new Dimension(50, 50));
+            //m.setPosterImg(image);
             
             l.add(m);
         }
@@ -194,4 +213,47 @@ public class Model {
         }
         return l;
     }
+    
+    public static BufferedImage resize(final URL url, int width, int height) throws IOException{
+        Image image = ImageIO.read(url);
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bufferedImage.createGraphics();
+
+        // Increase quality if needed at the expense of speed
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        AffineTransform scaleTransform = AffineTransform.getScaleInstance(
+                width / (double) image.getWidth(null), height / (double) image.getHeight(null));
+        g.drawImage(image, scaleTransform, null);
+
+        // Release resources
+        g.dispose();
+
+        return bufferedImage;
+    }
+    
+    public synchronized static void saveImage(int mid, String path) throws ClassNotFoundException, SQLException, IOException {
+        getConnection();
+        PreparedStatement pst = null;
+        conn.setAutoCommit(false);
+        URL url = new URL(path);
+        String tDir = System.getProperty("java.io.tmpdir"); 
+        String p = tDir + "tmp" + ".jpg"; 
+        File image = new File(p);
+        ImageIO.write(resize(url, 27*3, 40*3), "jpg", image);
+        FileInputStream fis = new FileInputStream (image);
+
+        String sql="update movie set poster_img = ? where movie_id = ?;";
+        pst = conn.prepareStatement(sql);
+
+        pst.setBinaryStream(1, (InputStream)fis, (int) image.length());
+        pst.setInt(2, mid);
+        pst.executeUpdate();
+        conn.commit();
+        pst.close();
+        fis.close();
+        conn.setAutoCommit(true);
+    }
+    
 }

@@ -1,5 +1,7 @@
 package com.example.vaadin542;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +12,10 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.example.vaadin542.model.Model;
 import com.example.vaadin542.model.Movie;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -19,9 +24,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.OptionGroup;
 
-public class ResultsPage extends ResultsLayout implements ClickListener {
+public class ResultsPage extends ResultsLayout implements ClickListener, ItemClickListener {
     UI parent;
     Window win = new Window();
+    Window summaryWindow = new Window();
     VerticalLayout windowContent = new VerticalLayout();
     OptionGroup extOptionGrp1 = new OptionGroup();
     OptionGroup extOptionGrp2 = new OptionGroup();
@@ -116,7 +122,15 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        
+        gridResults.addItemClickListener(this);
     }
 
     @Override
@@ -162,6 +176,12 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
 
@@ -184,6 +204,25 @@ public class ResultsPage extends ResultsLayout implements ClickListener {
 
             UI.getCurrent().removeWindow(win);
             UI.getCurrent().addWindow(win);
+        }
+    }
+
+    @Override
+    public void itemClick(ItemClickEvent event) {
+        if(event.isDoubleClick()) {
+            BeanItem<Movie> bean = (BeanItem<Movie>)gridResults.getItem(event.getItemId());
+            Movie s = (Movie)bean.getBean();
+            
+            summaryWindow.setContent(new MovieSummaryPage(s.getMovieTitle(), s.getYear() + "", s.getRating() + "", "$" + s.getBudget(), "$" + s.getRevenue(), "directors", "casts", "genres", s.getOverview(), "poster URL"));
+            
+            summaryWindow.setPosition(180, 56);
+            summaryWindow.setResizable(false);
+            summaryWindow.setWidth(760, Unit.PIXELS);
+            summaryWindow.setHeight(450, Unit.PIXELS);
+            summaryWindow.setModal(true);
+            
+            UI.getCurrent().removeWindow(summaryWindow);
+            UI.getCurrent().addWindow(summaryWindow);
         }
     }
 }
