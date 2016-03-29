@@ -40,5 +40,7 @@ public class ResultsLayout extends CssLayout {
 
     public ResultsLayout() {
         Design.read(this);
+        sldrRating.setMax(10);
+        sldrRating.setResolution(1);
     }
 }

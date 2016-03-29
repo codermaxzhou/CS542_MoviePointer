@@ -19,6 +19,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -33,7 +34,8 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
     OptionGroup extOptionGrp2 = new OptionGroup();
     OptionGroup extOptionGrp3 = new OptionGroup();
     OptionGroup extOptionGrp4 = new OptionGroup();
-
+    double rating;
+    
     public ResultsPage(ArrayList<String> query, UI parent) {
         optionGrp1.setMultiSelect(true);
         optionGrp2.setMultiSelect(true);
@@ -68,7 +70,7 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
             gridResults.setVisibleColumns("movieID", "movieTitle",
                     "year", "rating");
             
-            List<Integer> years = Model.filterYear();
+            List<String> years = Model.filterYear();
             List<String> genres = Model.filterGenre();
             List<String> directors = Model.filterDirector();
             List<String> actors = Model.filterActor();
@@ -159,9 +161,10 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
             List<String> selectedActor = new ArrayList<String>();
             selectedActor.addAll((Collection<? extends String>) optionGrp4.getValue());
             selectedActor.addAll((Collection<? extends String>) extOptionGrp4.getValue());
+            rating = sldrRating.getValue();
             
             try {
-            Model.generateFilterQuery(selectedYear, selectedGenre, selectedDirector, selectedActor);
+            Model.generateFilterQuery(selectedYear, selectedGenre, selectedDirector, selectedActor, rating);
             
             gridResults.setContainerDataSource(new BeanItemContainer<>(
                     Movie.class, Model.filter()));
@@ -213,8 +216,12 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
             BeanItem<Movie> bean = (BeanItem<Movie>)gridResults.getItem(event.getItemId());
             Movie s = (Movie)bean.getBean();
             
-            summaryWindow.setContent(new MovieSummaryPage(s.getMovieTitle(), s.getYear() + "", s.getRating() + "", "$" + s.getBudget(), "$" + s.getRevenue(), "directors", "casts", "genres", s.getOverview(), "poster URL"));
-            
+            try {
+                summaryWindow.setContent(new MovieSummaryPage(s.getMovieID(), s.getMovieTitle(), s.getYear() + "", s.getRating() + "", "$" + s.getBudget(), "$" + s.getRevenue(), "directors", "casts", "genres", s.getOverview(), s.getPosterPath()));
+            } catch (ClassNotFoundException | SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             summaryWindow.setPosition(180, 56);
             summaryWindow.setResizable(false);
             summaryWindow.setWidth(760, Unit.PIXELS);

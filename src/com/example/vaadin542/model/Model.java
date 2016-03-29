@@ -50,7 +50,7 @@ public class Model {
         return conn;
     }
     
-    public static void generateFilterQuery(List<Integer> y, List<String> g, List<String> d, List<String> a) {
+    public static void generateFilterQuery(List<Integer> y, List<String> g, List<String> d, List<String> a, double r) {
        queryFilter = queryMovie.replace(";", "");
        if (!y.isEmpty()) {
            queryFilter = queryFilter + " AND (year = " + y.remove(0);
@@ -79,7 +79,7 @@ public class Model {
                queryFilter = queryFilter + " OR movie_Id IN (SELECT movie_id FROM star_IN WHERE cast_id IN (SELECT cast_id FROM  cast WHERE name LIKE '%" + a.remove(0) + "%'))";
            queryFilter = queryFilter + ")";
        }
-       
+       queryFilter = queryFilter + " AND (rating >= '"+ r +"')";
        queryFilter = queryFilter + ";";
     }
     
@@ -143,7 +143,7 @@ public class Model {
             m.setRuntime(rs.getInt("runtime"));
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
-            m.setYear(rs.getInt("year"));
+            m.setYear(rs.getString("year"));
             l.add(m);
         }
         
@@ -166,7 +166,7 @@ public class Model {
             m.setRuntime(rs.getInt("runtime"));
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
-            m.setYear(rs.getInt("year"));
+            m.setYear(rs.getString("year"));
             
             //BufferedImage image = resize(new URL(m.getPosterPath()), new Dimension(50, 50));
             //m.setPosterImg(image);
@@ -178,11 +178,11 @@ public class Model {
         
     }
     
-    public static synchronized List<Integer> filterYear() throws ClassNotFoundException, SQLException {
-        List<Integer> l = new ArrayList<>();
+    public static synchronized List<String> filterYear() throws ClassNotFoundException, SQLException {
+        List<String> l = new ArrayList<>();
         ResultSet rs = dbAccess(queryYear);
         while(rs.next()) {
-            l.add(rs.getInt("year"));
+            l.add(rs.getString("year"));
         }
         return l;
     }
@@ -213,6 +213,19 @@ public class Model {
         }
         return l;
     }
+    
+    public static synchronized String getDirector(int id) throws ClassNotFoundException, SQLException {
+        ResultSet rs = dbAccess("SELECT name, COUNT(name) AS count FROM director joIN direct ON direct.director_id = director.director_id joIN (SELECT* FROM movie WHERE movie_id = " + id + ") a ON direct.movie_id=a.movie_Id GROUP BY name ORDER BY count DESC;");
+        String s = "";
+        while(rs.next()) {
+            s = s + rs.getString("name") + "; ";
+        }
+        if (s != "") {
+            s = s.substring(0, s.length()-2);
+        }
+        return s;
+    }
+    
     
     public static BufferedImage resize(final URL url, int width, int height) throws IOException{
         Image image = ImageIO.read(url);

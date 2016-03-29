@@ -20,7 +20,7 @@ public class Movie implements Serializable, Cloneable {
     private String posterPath;
     private float rating;
     private int numberOfRating;
-    private int year;
+    private String year;
     private BufferedImage posterImg;
     
     
@@ -32,11 +32,11 @@ public class Movie implements Serializable, Cloneable {
         this.posterImg = posterImg;
     }
     
-    public int getYear() {
+    public String getYear() {
         return year;
     }
     
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
