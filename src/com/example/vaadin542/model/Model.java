@@ -167,7 +167,8 @@ public class Model {
             m.setRating(rs.getFloat("rating"));
             m.setYear(rs.getString("year"));
             Blob blob = rs.getBlob("poster_img");
-            InputStream in = blob.getBinaryStream();
+            InputStream in = null;
+            if(blob != null) in = blob.getBinaryStream();
             m.setPosterImg(in);
             l.add(m);
         }
