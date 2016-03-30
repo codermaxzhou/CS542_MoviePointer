@@ -1,6 +1,5 @@
 package com.example.vaadin542.model;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -8,11 +7,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,10 +20,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-//import org.vaadin.addons.lazyquerycontainer.Query;
-//import org.vaadin.addons.lazyquerycontainer.QueryDefinition;
-//import org.vaadin.addons.lazyquerycontainer.QueryFactory;
 
 import javax.imageio.ImageIO;
 
@@ -144,6 +139,10 @@ public class Model {
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
             m.setYear(rs.getString("year"));
+            Blob blob = rs.getBlob("poster_img");
+            InputStream in = null;
+            if(blob != null) in = blob.getBinaryStream();
+            m.setPosterImg(in);
             l.add(m);
         }
         
@@ -167,10 +166,9 @@ public class Model {
             m.setPosterPath(rs.getString("poster_path"));
             m.setRating(rs.getFloat("rating"));
             m.setYear(rs.getString("year"));
-            
-            //BufferedImage image = resize(new URL(m.getPosterPath()), new Dimension(50, 50));
-            //m.setPosterImg(image);
-            
+            Blob blob = rs.getBlob("poster_img");
+            InputStream in = blob.getBinaryStream();
+            m.setPosterImg(in);
             l.add(m);
         }
         
@@ -226,8 +224,36 @@ public class Model {
         return s;
     }
     
+    public static synchronized String getGenre(int id) throws ClassNotFoundException, SQLException {
+        ResultSet rs = dbAccess("SELECT genre_name, COUNT(genre_name) AS count FROM genre joIN movietype ON genre.genre_id=movietype.genre_id joIN (SELECT* FROM movie WHERE movie_id = " + id + ") a ON movietype.movie_id=a.movie_Id GROUP BY genre_name ORDER BY count DESC;");
+        String s = "";
+        while(rs.next()) {
+            s = s + rs.getString("genre_name") + "; ";
+        }
+        if (s != "") {
+            s = s.substring(0, s.length()-2);
+        }
+        return s;
+    }
     
-    public static BufferedImage resize(final URL url, int width, int height) throws IOException{
+    public static synchronized String getActor(int id) throws ClassNotFoundException, SQLException {
+        ResultSet rs = dbAccess("SELECT name, COUNT(name) AS count FROM cast joIN star_IN on cast.cast_id = star_IN.cast_id joIN (SELECT* FROM movie WHERE movie_id = " + id + ") a ON star_IN.movie_id=a.movie_Id GROUP BY name ORDER BY count DESC;");
+        String s = "";
+        int count = 0;
+        while(rs.next() && (count < 5)) {
+            s = s + rs.getString("name") + "; ";
+            count ++;
+        }
+        if (s != "") {
+            s = s.substring(0, s.length()-2);
+        }
+        if (count == 5) {
+            s = s + " ...";
+        }
+        return s;
+    }
+    
+    public static BufferedImage resize(final URL url, int width, int height) throws IOException {
         Image image = ImageIO.read(url);
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = bufferedImage.createGraphics();

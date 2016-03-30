@@ -1,8 +1,10 @@
 package com.example.vaadin542;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,10 +14,14 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import com.example.vaadin542.model.Model;
 import com.example.vaadin542.model.Movie;
+import com.ibm.icu.text.NumberFormat;
+import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
+import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -23,6 +29,7 @@ import com.vaadin.ui.Slider;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.OptionGroup;
 
 public class ResultsPage extends ResultsLayout implements ClickListener, ItemClickListener {
@@ -65,9 +72,38 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
 
         try {
             Model.generateQuery(query);
-            gridResults.setContainerDataSource(new BeanItemContainer<>(
-                    Movie.class, Model.search()));
-            gridResults.setVisibleColumns("movieID", "movieTitle",
+            BeanItemContainer<Movie> beans = new BeanItemContainer<>(Movie.class, Model.search());
+            
+            IndexedContainer modifiedContainer = new IndexedContainer();
+            
+            for(Object propId : beans.getContainerPropertyIds()) {
+                if(propId.equals("posterImg")) {
+                    modifiedContainer.addContainerProperty(propId, Image.class, null);
+                } else {
+                    modifiedContainer.addContainerProperty(propId, beans.getType(propId), null);
+                }
+            }
+           
+            for(Object itemId : beans.getItemIds()) {
+                Item item = beans.getItem(itemId);
+                Item newItem = modifiedContainer.addItem(itemId);
+                for(Object propId : beans.getContainerPropertyIds()) {
+                    if(propId.equals("posterImg")) {
+                        InputStream data = (InputStream)item.getItemProperty(propId).getValue();
+                        StreamResource res = null;
+                        if(data != null) res = new StreamResource(new ImageStream(data), "test");
+                        Image img = new Image("", res);
+                        img.setHeight(60, Unit.PIXELS);
+                        img.setWidth(40, Unit.PIXELS);
+                        newItem.getItemProperty(propId).setValue(img);
+                    } else {
+                        newItem.getItemProperty(propId).setValue(item.getItemProperty(propId).getValue());
+                    }
+                }
+            }
+            
+            gridResults.setContainerDataSource(modifiedContainer);
+            gridResults.setVisibleColumns("posterImg", "movieTitle",
                     "year", "rating");
             
             List<String> years = Model.filterYear();
@@ -166,9 +202,38 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
             try {
             Model.generateFilterQuery(selectedYear, selectedGenre, selectedDirector, selectedActor, rating);
             
-            gridResults.setContainerDataSource(new BeanItemContainer<>(
-                    Movie.class, Model.filter()));
-            gridResults.setVisibleColumns("movieID", "movieTitle",
+            BeanItemContainer<Movie> beans = new BeanItemContainer<>(Movie.class, Model.filter());
+            
+            IndexedContainer modifiedContainer = new IndexedContainer();
+            
+            for(Object propId : beans.getContainerPropertyIds()) {
+                if(propId.equals("posterImg")) {
+                    modifiedContainer.addContainerProperty(propId, Image.class, null);
+                } else {
+                    modifiedContainer.addContainerProperty(propId, beans.getType(propId), null);
+                }
+            }
+           
+            for(Object itemId : beans.getItemIds()) {
+                Item item = beans.getItem(itemId);
+                Item newItem = modifiedContainer.addItem(itemId);
+                for(Object propId : beans.getContainerPropertyIds()) {
+                    if(propId.equals("posterImg")) {
+                        InputStream data = (InputStream)item.getItemProperty(propId).getValue();
+                        StreamResource res = null;
+                        if(data != null) res = new StreamResource(new ImageStream(data), "test");
+                        Image img = new Image("", res);
+                        img.setHeight(60, Unit.PIXELS);
+                        img.setWidth(40, Unit.PIXELS);
+                        newItem.getItemProperty(propId).setValue(img);
+                    } else {
+                        newItem.getItemProperty(propId).setValue(item.getItemProperty(propId).getValue());
+                    }
+                }
+            }
+            
+            gridResults.setContainerDataSource(modifiedContainer);
+            gridResults.setVisibleColumns("posterImg", "movieTitle",
                     "year", "rating");
             } catch (IllegalArgumentException e) {
                 // TODO Auto-generated catch block
@@ -213,11 +278,17 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
     @Override
     public void itemClick(ItemClickEvent event) {
         if(event.isDoubleClick()) {
-            BeanItem<Movie> bean = (BeanItem<Movie>)gridResults.getItem(event.getItemId());
-            Movie s = (Movie)bean.getBean();
-            
+            int movieid = (int)gridResults.getItem(event.getItemId()).getItemProperty("movieID").getValue();
+            String movietitle = gridResults.getItem(event.getItemId()).getItemProperty("movieTitle").getValue().toString();
+            String year = gridResults.getItem(event.getItemId()).getItemProperty("year").getValue().toString();
+            String rating = gridResults.getItem(event.getItemId()).getItemProperty("rating").getValue().toString();
+            DecimalFormat formatter = new DecimalFormat("#,###.00");
+            int budget = (int)gridResults.getItem(event.getItemId()).getItemProperty("budget").getValue();
+            int revenue = (int)gridResults.getItem(event.getItemId()).getItemProperty("revenue").getValue();
+            String overview = gridResults.getItem(event.getItemId()).getItemProperty("overview").getValue().toString();
+            String path = gridResults.getItem(event.getItemId()).getItemProperty("posterPath").getValue().toString();
             try {
-                summaryWindow.setContent(new MovieSummaryPage(s.getMovieID(), s.getMovieTitle(), s.getYear() + "", s.getRating() + "", "$" + s.getBudget(), "$" + s.getRevenue(), "directors", "casts", "genres", s.getOverview(), s.getPosterPath()));
+                summaryWindow.setContent(new MovieSummaryPage(movieid, movietitle, year, rating, "$" + formatter.format(budget), "$" + formatter.format(revenue) , overview, path));
             } catch (ClassNotFoundException | SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

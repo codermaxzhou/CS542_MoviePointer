@@ -1,7 +1,10 @@
 package com.example.vaadin542.model;
 
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.sql.Blob;
+
 import org.apache.commons.beanutils.BeanUtils;
 import java.util.Date;
 
@@ -21,14 +24,14 @@ public class Movie implements Serializable, Cloneable {
     private float rating;
     private int numberOfRating;
     private String year;
-    private BufferedImage posterImg;
+    private InputStream posterImg;
     
     
-    public BufferedImage getPosterImg() {
+    public InputStream getPosterImg() {
         return posterImg;
     }
     
-    public void setPosterImg(BufferedImage posterImg) {
+    public void setPosterImg(InputStream posterImg) {
         this.posterImg = posterImg;
     }
     
