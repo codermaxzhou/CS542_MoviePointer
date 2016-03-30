@@ -4,12 +4,14 @@
   <meta charset="UTF-8" name="design-properties" content="{&quot;RULERS_VISIBLE&quot;:true,&quot;GUIDELINES_VISIBLE&quot;:false,&quot;SNAP_TO_OBJECTS&quot;:true,&quot;SNAP_TO_GRID&quot;:true,&quot;SNAPPING_DISTANCE&quot;:10,&quot;JAVA_SOURCES_ROOT&quot;:&quot;src&quot;,&quot;THEME&quot;:&quot;vaadin542&quot;}">
  </head> 
  <body> 
-  <vaadin-css-layout size-full> 
-   <vaadin-vertical-layout> 
-    <vaadin-button icon="fonticon://FontAwesome/f015" style-name="btnHome" plain-text _id="btnHome"></vaadin-button> 
-   </vaadin-vertical-layout> 
+  <vaadin-css-layout size-full>  
    <vaadin-horizontal-split-panel split-position="20.416666%" _id="rightBar"> 
     <vaadin-grid-layout width-full> 
+    <row> 
+      <column> 
+       <vaadin-button icon="fonticon://FontAwesome/f015" style-name="btnHome" plain-text _id="btnHome"></vaadin-button>
+      </column> 
+     </row> 
      <row> 
       <column> 
        <vaadin-label style-name="filterLabel" width="35px" plain-text _id="lblYear">

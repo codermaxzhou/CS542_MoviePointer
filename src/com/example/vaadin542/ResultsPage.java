@@ -93,8 +93,8 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
                         StreamResource res = null;
                         if(data != null) res = new StreamResource(new ImageStream(data), "test");
                         Image img = new Image("", res);
-                        img.setHeight(60, Unit.PIXELS);
-                        img.setWidth(40, Unit.PIXELS);
+                        img.setHeight(100, Unit.PIXELS);
+                        img.setWidth(70, Unit.PIXELS);
                         newItem.getItemProperty(propId).setValue(img);
                     } else {
                         newItem.getItemProperty(propId).setValue(item.getItemProperty(propId).getValue());
@@ -223,8 +223,8 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
                         StreamResource res = null;
                         if(data != null) res = new StreamResource(new ImageStream(data), "test");
                         Image img = new Image("", res);
-                        img.setHeight(60, Unit.PIXELS);
-                        img.setWidth(40, Unit.PIXELS);
+                        img.setHeight(100, Unit.PIXELS);
+                        img.setWidth(70, Unit.PIXELS);
                         newItem.getItemProperty(propId).setValue(img);
                     } else {
                         newItem.getItemProperty(propId).setValue(item.getItemProperty(propId).getValue());
