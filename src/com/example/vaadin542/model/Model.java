@@ -225,14 +225,11 @@ public class Model {
         return s;
     }
     
-    public static synchronized String getGenre(int id) throws ClassNotFoundException, SQLException {
+    public static synchronized List<String> getGenre(int id) throws ClassNotFoundException, SQLException {
         ResultSet rs = dbAccess("SELECT genre_name, COUNT(genre_name) AS count FROM genre joIN movietype ON genre.genre_id=movietype.genre_id joIN (SELECT* FROM movie WHERE movie_id = " + id + ") a ON movietype.movie_id=a.movie_Id GROUP BY genre_name ORDER BY count DESC;");
-        String s = "";
+        List<String> s = new ArrayList<String>();
         while(rs.next()) {
-            s = s + rs.getString("genre_name") + "; ";
-        }
-        if (s != "") {
-            s = s.substring(0, s.length()-2);
+            s.add(rs.getString("genre_name"));
         }
         return s;
     }
