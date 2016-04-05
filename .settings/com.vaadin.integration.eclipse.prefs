@@ -1,4 +1,6 @@
 com.vaadin.integration.eclipse.mavenLatestVersionsUpgrade=["7.6.4"]
+com.vaadin.integration.eclipse.previousCompileAction=widgetset
 com.vaadin.integration.eclipse.useLatestNightly=false
+com.vaadin.integration.eclipse.widgetsetCompilationEta=95424
 com.vaadin.integration.eclipse.widgetsetDirty=false
 eclipse.preferences.version=1

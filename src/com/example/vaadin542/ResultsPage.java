@@ -288,8 +288,9 @@ public class ResultsPage extends ResultsLayout implements ClickListener, ItemCli
             String overview = gridResults.getItem(event.getItemId()).getItemProperty("overview").getValue().toString();
             String path = gridResults.getItem(event.getItemId()).getItemProperty("posterPath").getValue().toString();
             try {
+                //summaryWindow.setContent(new GenreStatsPage());
                 summaryWindow.setContent(new MovieSummaryPage(movieid, movietitle, year, rating, "$" + formatter.format(budget), "$" + formatter.format(revenue) , overview, path));
-            } catch (ClassNotFoundException | SQLException e) {
+            } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

@@ -19,7 +19,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -291,6 +293,33 @@ public class Model {
         pst.close();
         fis.close();
         conn.setAutoCommit(true);
+    }
+    
+    public static synchronized HashMap<String, Integer> getDirectorFromGenre(String genre) throws ClassNotFoundException, SQLException {
+        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        ResultSet rs = dbAccess("SELECT name, COUNT(name) AS col FROM director joIN direct ON direct.director_id = director.director_id joIN (SELECT* FROM movie WHERE movie_id IN(SELECT movie_id FROM movietype WHERE genre_id IN (SELECT genre_id FROM genre WHERE genre_name = '"+ genre + "'))) a ON direct.movie_id=a.movie_Id GROUP BY name ORDER BY col DESC LIMIT 8;");
+        
+        while(rs.next()) {
+            result.put(rs.getString("name"), rs.getInt("col"));
+        }
+        
+        return result;
+    }
+    
+    public static synchronized List<Number> getYearFromGenre(String genre) throws ClassNotFoundException, SQLException {
+        List<Number> result = new ArrayList<Number>();
+        ResultSet rs;
+        
+        for (int i = 1915; i < 2005; i = i + 10) {
+            rs = dbAccess("SELECT count(*) as num FROM movie WHERE movie_id IN (SELECT movie_id FROM movietype WHERE genre_id IN (SELECT genre_id FROM genre WHERE genre_name = '" + genre + "')) and year >= " + i + " and year <= " + (i+10) + ";");
+            if(rs.next()){
+                result.add(rs.getInt("num"));
+            } else {
+                result.add(0);
+            }
+        }
+        
+        return result;
     }
     
 }
